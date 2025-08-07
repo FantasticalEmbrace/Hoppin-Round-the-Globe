@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acadia POS - Sandbox Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="pos-container">
+        <!-- Header -->
+        <header class="pos-header">
+            <div class="logo">
+                <i class="fas fa-cash-register"></i>
+                <h1>Acadia POS Demo</h1>
+            </div>
+            <div class="header-info">
+                <span class="store-name">Demo Store</span>
+                <span class="cashier">Cashier: Demo User</span>
+                <span class="date-time" id="datetime"></span>
+            </div>
+        </header>
+
+        <div class="pos-main">
+            <!-- Left Panel - Product Categories & Items -->
+            <div class="left-panel">
+                <div class="categories">
+                    <button class="category-btn active" data-category="all">All Items</button>
+                    <button class="category-btn" data-category="food">Food</button>
+                    <button class="category-btn" data-category="beverages">Beverages</button>
+                    <button class="category-btn" data-category="retail">Retail</button>
+                </div>
+                
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Center Panel - Cart -->
+            <div class="center-panel">
+                <div class="cart-header">
+                    <h2>Current Order</h2>
+                    <button class="clear-cart-btn" id="clearCart">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+                
+                <div class="cart-items" id="cartItems">
+                    <!-- Cart items will appear here -->
+                </div>
+                
+                <div class="cart-summary">
+                    <div class="summary-line">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    <div class="summary-line">
+                        <span>Tax (8.5%):</span>
+                        <span id="tax">$0.00</span>
+                    </div>
+                    <div class="summary-line total">
+                        <span>Total:</span>
+                        <span id="total">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Payment & Actions -->
+            <div class="right-panel">
+                <div class="payment-section">
+                    <h3>Payment Methods</h3>
+                    
+                    <div class="payment-buttons">
+                        <button class="payment-btn" data-method="cash">
+                            <i class="fas fa-money-bill-wave"></i>
+                            Cash
+                        </button>
+                        <button class="payment-btn" data-method="card">
+                            <i class="fas fa-credit-card"></i>
+                            Card
+                        </button>
+                        <button class="payment-btn" data-method="mobile">
+                            <i class="fas fa-mobile-alt"></i>
+                            Mobile Pay
+                        </button>
+                        <button class="payment-btn" data-method="gift">
+                            <i class="fas fa-gift"></i>
+                            Gift Card
+                        </button>
+                    </div>
+
+                    <div class="amount-input">
+                        <label for="paymentAmount">Payment Amount:</label>
+                        <input type="number" id="paymentAmount" step="0.01" placeholder="0.00">
+                    </div>
+
+                    <button class="process-payment-btn" id="processPayment">
+                        <i class="fas fa-check-circle"></i>
+                        Process Payment
+                    </button>
+                </div>
+
+                <div class="actions-section">
+                    <h3>Actions</h3>
+                    <button class="action-btn" id="printReceipt">
+                        <i class="fas fa-print"></i>
+                        Print Receipt
+                    </button>
+                    <button class="action-btn" id="emailReceipt">
+                        <i class="fas fa-envelope"></i>
+                        Email Receipt
+                    </button>
+                    <button class="action-btn" id="holdOrder">
+                        <i class="fas fa-pause"></i>
+                        Hold Order
+                    </button>
+                    <button class="action-btn" id="voidTransaction">
+                        <i class="fas fa-times-circle"></i>
+                        Void Transaction
+                    </button>
+                </div>
+
+                <div class="customer-section">
+                    <h3>Customer Info</h3>
+                    <input type="text" id="customerName" placeholder="Customer Name">
+                    <input type="email" id="customerEmail" placeholder="Customer Email">
+                    <input type="tel" id="customerPhone" placeholder="Customer Phone">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Processing Payment</h3>
+                <span class="close" id="closeModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="payment-simulator">
+                    <div class="card-reader">
+                        <i class="fas fa-credit-card"></i>
+                        <p>Insert, Swipe, or Tap Card</p>
+                        <div class="card-animation"></div>
+                    </div>
+                    <div class="payment-status" id="paymentStatus">
+                        Waiting for payment...
+                    </div>
+                    <div class="payment-progress">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div class="modal" id="receiptModal">
+        <div class="modal-content receipt-content">
+            <div class="modal-header">
+                <h3>Receipt Preview</h3>
+                <span class="close" id="closeReceiptModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="receipt" id="receiptContent">
+                    <!-- Receipt content will be generated here -->
+                </div>
+                <div class="receipt-actions">
+                    <button class="btn-primary" id="printReceiptBtn">
+                        <i class="fas fa-print"></i> Print Receipt
+                    </button>
+                    <button class="btn-secondary" id="emailReceiptBtn">
+                        <i class="fas fa-envelope"></i> Email Receipt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
